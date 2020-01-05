@@ -29,6 +29,7 @@ class GRUModel(AbstractModel):
         self.dense_only = False
         self.second_gru_size = second_gru_size
 
+
     def fit(self, text_X, status_y):
         # process the input data to model usable vector
         X, y = self.vectorize_dataset(text_X, status_y)
@@ -106,14 +107,16 @@ class GRUModel(AbstractModel):
         """
 
         vectorized_data = np.zeros((len(items), self.maxlen), dtype=np.int)
+
+        # use pre-padding and pre-truncated as Keras default setting
         for i in range(len(items)):
             offset = max(self.maxlen - len(items[i]), 0)
             for t, char in enumerate(items[i]):
                 if t >= self.maxlen:
                     break
                 vectorized_data[0, t+offset] = self.char_indices[char]
-        return [pred[0] for pred in self.model.predict(vectorized_data)]
 
+        return [pred[0] for pred in self.model.predict(vectorized_data)]
 
 
     def vectorize_dataset(self, text_X, status_y):
