@@ -50,6 +50,11 @@ class GRUModel(AbstractModel):
 
             embedding_matrix = np.zeros((num_chars+1, self.embedding_dim))
 
+            for char, i in self.char_indices.items():
+                vec = embedding_vectors.get(char)
+                assert(vec is not None)
+                embedding_matrix[i] = vec
+
             # TODO: finish embedding matrix mapping
             print("the embedding matrix has shape: ", embedding_matrix.shape)
             pre_layers.append(keras.layers.Embedding(
@@ -86,6 +91,7 @@ class GRUModel(AbstractModel):
         else:
             # only use the embedding layer and FCN if dense only set to true
             layers = pre_layers + [
+                keras.layers.Flatten(),
                 keras.layers.Dense(8, activation='relu'),
                 keras.layers.Dense(4, activation='relu'),
                 keras.layers.Dense(2, activation='relu'),
