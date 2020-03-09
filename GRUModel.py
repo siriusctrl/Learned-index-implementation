@@ -48,6 +48,7 @@ class GRUModel(AbstractModel):
                     char = line_split[0]
                     embedding_vectors[char] = vec
 
+            # the embedding matrix left index 0 as "mask_zero"
             embedding_matrix = np.zeros((num_chars+1, self.embedding_dim))
 
             for char, i in self.char_indices.items():
@@ -55,7 +56,9 @@ class GRUModel(AbstractModel):
                 assert(vec is not None)
                 embedding_matrix[i] = vec
 
-            # TODO: finish embedding matrix mapping
+            # the embedding layer will be update during the training process
+            # For how embedding vector are learned visit 
+            # https://towardsdatascience.com/neural-network-embeddings-explained-4d028e6f0526
             print("the embedding matrix has shape: ", embedding_matrix.shape)
             pre_layers.append(keras.layers.Embedding(
                 num_chars+1, self.embedding_dim, input_length=self.maxlen, weights=[embedding_matrix]
